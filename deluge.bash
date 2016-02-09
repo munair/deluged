@@ -45,7 +45,7 @@ ssh -i $key ubuntu@$1 "sudo /etc/init.d/deluge-daemon start"
 
 echo " "
 echo " "
-echo "$0 : to log in to $instance please use the following command: ssh -i ~/Downloads/tokyomobile.pem ubuntu@$1 -L:8112:127.0.0.1:8112"
+echo "$0 : to log in to $instance please use the following command: ssh -i $key ubuntu@$1 -L:8112:127.0.0.1:8112"
 echo "$0 : to change file ownership in the download directory please use the following command: ssh -i $key ubuntu@$1 sudo chown -R ubuntu:ubuntu /var/lib/deluge/*"
 echo "$0 : to copy files please use the following command: scp -i $key ubuntu@$1:/var/lib/deluge/*/* ."
 exit $E_SUCCESS
