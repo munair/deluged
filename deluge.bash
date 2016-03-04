@@ -24,27 +24,27 @@ then
 fi
 
 # determine which SSH key to use from pem files found in the user directory
-source selectfilelisting.bash ~ pem 2>/dev/null
+[ "$LISTING" == "" ] && source selectfilelisting.bash ~ pem 2>/dev/null
 
 # set variables
 echo "setting variables... "
 instance="$1" && echo "$0 set instance=$instance"
+ssh="ssh -i $key ubuntu@$instance" && echo "$0 set ssh=$ssh"
 key="$LISTING" && echo "$0 set key=$key"
+echo "set variables."
 
-ssh -i $key ubuntu@$1 "sudo adduser --disabled-password --system --home /var/lib/deluge --gecos delugeserver --group deluge"
-ssh -i $key ubuntu@$1 "sudo touch /var/log/deluged.log"
-ssh -i $key ubuntu@$1 "sudo touch /var/log/deluge-web.log"
-ssh -i $key ubuntu@$1 "sudo chown -R deluge:deluge /var/log/deluge*"
-ssh -i $key ubuntu@$1 "sudo apt-get update"
-ssh -i $key ubuntu@$1 "sudo apt-get install -y deluged"
-ssh -i $key ubuntu@$1 "sudo apt-get install -y deluge-webui"
-ssh -i $key ubuntu@$1 "sudo curl -o /etc/default/deluge-daemon  https://s3-ap-northeast-1.amazonaws.com/scriptious/etc_default_deluge-daemon"
-ssh -i $key ubuntu@$1 "sudo curl -o /etc/init.d/deluge-daemon  https://s3-ap-northeast-1.amazonaws.com/scriptious/etc_init.d_deluge-daemon"
-ssh -i $key ubuntu@$1 "sudo chmod a+x /etc/init.d/deluge-daemon"
-ssh -i $key ubuntu@$1 "sudo /etc/init.d/deluge-daemon start"
+$ssh "sudo adduser --disabled-password --system --home /var/lib/deluge --gecos delugeserver --group deluge"
+$ssh "sudo touch /var/log/deluged.log"
+$ssh "sudo touch /var/log/deluge-web.log"
+$ssh "sudo chown -R deluge:deluge /var/log/deluge*"
+$ssh "sudo apt-get update"
+$ssh "sudo apt-get install -y deluged"
+$ssh "sudo apt-get install -y deluge-webui"
+$ssh "sudo curl -o /etc/default/deluge-daemon  https://s3-ap-northeast-1.amazonaws.com/scriptious/etc_default_deluge-daemon"
+$ssh "sudo curl -o /etc/init.d/deluge-daemon  https://s3-ap-northeast-1.amazonaws.com/scriptious/etc_init.d_deluge-daemon"
+$ssh "sudo chmod a+x /etc/init.d/deluge-daemon"
+$ssh "sudo /etc/init.d/deluge-daemon start"
 
-echo " "
-echo " "
 echo "$0 : to log in to $instance please use the following command: ssh -i $key ubuntu@$1 -L:8112:127.0.0.1:8112"
 echo "$0 : to change file ownership in the download directory please use the following command: ssh -i $key ubuntu@$1 sudo chown -R ubuntu:ubuntu /var/lib/deluge/*"
 echo "$0 : to copy files please use the following command: scp -i $key ubuntu@$1:/var/lib/deluge/*/* ."
