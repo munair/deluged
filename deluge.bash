@@ -29,8 +29,8 @@ fi
 # set variables
 echo "setting variables... "
 instance="$1" && echo "$0 set instance=$instance"
-ssh="ssh -i $key ubuntu@$instance" && echo "$0 set ssh=$ssh"
 key="$LISTING" && echo "$0 set key=$key"
+ssh="ssh -i $key ubuntu@$instance" && echo "$0 set ssh=$ssh"
 echo "set variables."
 
 $ssh "sudo adduser --disabled-password --system --home /var/lib/deluge --gecos delugeserver --group deluge"
